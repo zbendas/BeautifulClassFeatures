@@ -49,7 +49,7 @@ def feature_heads(tag):
 def get_feature_names(soup):
     feature_names = []
     for tag in soup.find_all(feature_heads):
-        feature_names.append((tag.contents[1].strip(" ()")))
+        feature_names.append(re.sub(r" *?(\()((Ex)|(Sp)|(Su))[^A-Za-z] *(\)?) *", '', tag.contents[1].string))
     return feature_names
 
 
@@ -92,6 +92,9 @@ def recur_for_p(tag, array, full_text=""):
                 or (sibling.name == "div" and not good_div(tag)):
             full_text = re.sub(r'<div class=.*?>.*</div>', '', full_text)
             full_text = re.sub(r' {2,}', ' ', full_text)
+            full_text = re.sub(r' \.', '.', full_text)
+            full_text = re.sub(r' ,', ',', full_text)
+            full_text = re.sub(r'×', 'x', full_text)
             flush_to_array(full_text, array)
             next_tag = sibling
             full_text = ""
