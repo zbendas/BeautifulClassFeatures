@@ -70,7 +70,7 @@ def flush_to_array(full_text, array):
     # Replace %mdash; with a regular minus
     full_text = re.sub(r"–", '-', full_text)
     # Fix and escape quotes
-    full_text = full_text.replace("”", '"').replace('“', '"').replace("'", r"\'").replace('"', r'\"')
+    full_text = full_text.replace("’", "'").replace("”", '"').replace('“', '"').replace("'", r"\'").replace('"', r'\"')
     if array.append(full_text):
         return True
     else:
@@ -81,12 +81,17 @@ def recur_for_p(tag, array, full_text=""):
     next_tag = ""
     for sibling in tag.next_siblings:
         if sibling.name == "p" or sibling.name == "ul" or sibling.name == "li" or sibling.name == "a":
-            full_text += re.sub(href_stripper, '', re.sub('(?<!/)(?<=\")>', '> ', str(sibling)))
+            full_text += re.sub(href_stripper, ' ', re.sub('(?<!/)(?<=\")>', '> ', str(sibling)))
         if sibling.name == "div" and good_div(tag):
-                full_text += re.sub(href_stripper, '', str(sibling))
+                full_text += re.sub(href_stripper, ' ', str(sibling))
+        if sibling.name == "table":
+            # This may help counteract the problems that embedded tables seem to cause
+                full_text += ''
         if (sibling.name != "p" and sibling.name != "ul" and sibling.name != "li" and sibling.name != "a"
-                and sibling.name != "div" and sibling.name != "None") or (sibling.name == "div" and not good_div(tag)):
+                and sibling.name != "div" and sibling.name != "table" and sibling.name != "None")\
+                or (sibling.name == "div" and not good_div(tag)):
             full_text = re.sub(r'<div class=.*?>.*</div>', '', full_text)
+            full_text = re.sub(r' {2,}', ' ', full_text)
             flush_to_array(full_text, array)
             next_tag = sibling
             full_text = ""
