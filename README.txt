@@ -1,0 +1,1 @@
+This Python3 script attempts to create valid MySQL queries for inputting data from the d20pfsrd website by way of the BeautifulSoup HTML scraper. This particular usage expects the user to have the lxml Python package installed.
