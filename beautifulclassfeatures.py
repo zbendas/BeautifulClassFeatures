@@ -94,6 +94,8 @@ def recur_for_p(tag, array, full_text=""):
             full_text = re.sub(r' {2,}', ' ', full_text)
             full_text = re.sub(r' \.', '.', full_text)
             full_text = re.sub(r' ,', ',', full_text)
+            full_text = re.sub(r" '", "'", full_text)
+            full_text = re.sub(r' ;', ';', full_text)
             full_text = re.sub(r'×', 'x', full_text)
             flush_to_array(full_text, array)
             next_tag = sibling
